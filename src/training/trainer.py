@@ -2,29 +2,40 @@ import torch
 from torchvision import datasets, transforms
 from src.models.mlp import MLP
 
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.1307,), (0.3081,)),
-    transforms.Lambda(lambda x: torch.flatten(x))
+tform = transforms.Compose([
+    transforms.ToTensor(), 
+    transforms.Normalize((0.1307,), (0.3081,)), 
+    transforms.Lambda(lambda x: x.view(-1))
 ])
 
 train_loader = torch.utils.data.DataLoader(
-    datasets.MNIST('./data', train=True, download=True, transform=transform),
+    datasets.MNIST('./data', train=True, download=True, transform=tform), 
     batch_size=64, shuffle=True
 )
+
+test_loader = torch.utils.data.DataLoader(
+    datasets.MNIST('./data', train=False, transform=tform), 
+    batch_size=1000
+)
+
 model = MLP()
-criterion = torch.nn.CrossEntropyLoss()
-learning_rate = 0.01
+loss_fn = torch.nn.CrossEntropyLoss()
+lr = 0.01
 
 for epoch in range(5):
-    total_loss = 0
-    for batch_idx, (data, target) in enumerate(train_loader):
+    for data, target in train_loader:
         output = model(data)
-        loss = criterion(output, target)
+        loss = loss_fn(output, target)
         loss.backward()
+        
         with torch.no_grad():
-            for param in model.parameters():
-                param -= learning_rate * param.grad
+            for p in model.parameters():
+                p -= lr * p.grad
             model.zero_grad()
-        total_loss += loss.item()
-    print(f"Epoch {epoch+1} | Avg Loss: {total_loss/len(train_loader):.4f}")
+            
+    print(f"Epoch {epoch+1} | Loss: {loss.item():.4f}")
+
+model.eval()
+with torch.no_grad():
+    correct = sum((model(d).argmax(1) == t).sum().item() for d, t in test_loader)
+    print(f"Test Accuracy: {correct / 100:.2f}%")
