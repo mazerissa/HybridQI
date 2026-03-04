@@ -1,2 +1,11 @@
-venv
-    
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+visuals/*.png
+*.pt
+*.pth
+models/*.pth
+.DS_Store
+Thumbs.db
