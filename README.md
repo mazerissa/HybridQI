@@ -1,7 +1,7 @@
 # 🧠 HybridQI
 
 ### *Journal Entry*
-I started with a simple question: *Can we teach a machine to see using only raw calculus?* Most people use "Black Box" libraries. I didn't. After building the MLP and the Optimizers, I have now successfully built my own **Autograd Engine**. I no longer rely on pre-made backpropagation.
+I started with a simple question: *Can we teach a machine to see using only raw calculus?* Most people use "Black Box" libraries. I didn't. After building the MLP and the Optimizers, I have now successfully built my own **Autograd Engine**. I don't rely on pre-made backpropagation.
 
 ---
 
