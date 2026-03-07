@@ -1,12 +1,12 @@
 from src.autograd.tensor import Tensor
 
+a = Tensor(2.0, requires_grad=True)
+b = Tensor(3.0, requires_grad=True)
+c = a * b
+d = c.relu()
+e = d + a
 
-x1 = Tensor(5.0, requires_grad=True)
-y1 = x1.relu()
-y1.backward()
-
-print(f"ReLU(5.0) Grad: {x1.grad}")
-x2 = Tensor(-5.0, requires_grad=True)
-y2 = x2.relu()
-y2.backward()
-print(f"ReLU(-5.0) Grad: {x2.grad}")
+print(f"Forward Result (e): {e.data}")
+e.backward()
+print(f"Gradient of a: {a.grad}")
+print(f"Gradient of b: {b.grad}")
